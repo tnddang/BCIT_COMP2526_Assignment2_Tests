@@ -403,7 +403,7 @@ public class ArraySetTest {
     }
 	
     @Test
-    void testIteratorRemove() {
+    public void testIteratorRemove() {
         for (int i = 0; i < MEDIUM; i++) {
             testArraySet.add(i);
         }
@@ -415,7 +415,7 @@ public class ArraySetTest {
     }
 	
     @Test
-    void testIteratorRemoveBeforeNext() {
+    public void testIteratorRemoveBeforeNext() {
         for (int i = 0; i < MEDIUM; i++) {
             testArraySet.add(i);
         }
@@ -427,7 +427,7 @@ public class ArraySetTest {
     }
 	
     @Test
-    void testIteratorRemoveAllElement() {
+    public void testIteratorRemoveAllElement() {
         for (int i = 0; i < MEDIUM; i++) {
             testArraySet.add(i);
         }
@@ -437,6 +437,88 @@ public class ArraySetTest {
             System.out.println(toRemove);
             itr.remove();
         }
+        assertEquals(0, testArraySet.size());
+    }
+    @Test
+    public void testRemoveAllNullFromEmptySet() {
+        //assertFalse(testArraySet.removeAll(null));
+        //assertTrue(testArraySet.size() == 0);
+        Assertions.assertThrows(NullPointerException.class,
+                () -> testArraySet.removeAll(null));
+    }
+
+    @Test
+    public void testRemoveAllFromEmptySet(){
+        ArrayList<Integer> toRemove = new ArrayList<>(Arrays.asList(1,2,3,4,5));
+        assertFalse(testArraySet.removeAll(toRemove));
+        assertEquals(0, testArraySet.size());
+    }
+
+    @Test
+    public void testRemoveAllNullFromNotEmptySet(){
+        for (int i = 0; i < SMALL; ++i) {
+            testArraySet.add(i);
+        }
+        Assertions.assertThrows(NullPointerException.class,
+                () -> testArraySet.removeAll(null));
+    }
+
+    @Test
+    public void testRemoveAllCollectionWithNullFromEmptySet() {
+        ArrayList<Integer> toRemove = new ArrayList<>(Arrays.asList(1,2,null,4,5));
+        assertFalse(testArraySet.removeAll(toRemove));
+        assertEquals(0, testArraySet.size());
+    }
+
+    @Test
+    public void testRemoveAllCollectionWithNullFromNotEmptySet() {
+        for (int i = 0; i < SMALL; ++i) {
+            testArraySet.add(i);
+        }
+        ArrayList<Integer> toRemove = new ArrayList<>(Arrays.asList(1,2,null,4,5));
+        assertTrue(testArraySet.removeAll(toRemove));
+        assertEquals(6, testArraySet.size());
+    }
+
+    @Test
+    public void testRemoveAllFromNotEmptySet(){
+        for (int i = 0; i < SMALL; ++i) {
+            testArraySet.add(i);
+        }
+        ArrayList<Integer> toRemove = new ArrayList<>(Arrays.asList(1,3,5,7,9));
+        assertTrue(testArraySet.removeAll(toRemove));
+        assertEquals(SMALL - toRemove.size(), testArraySet.size());
+        assertFalse(testArraySet.containsAll(toRemove));
+    }
+
+    @Test
+    public void testRemoveAllFromNotEmptySetSome() {
+        for (int i = 0; i < SMALL; ++i) {
+            testArraySet.add(i);
+        }
+        ArrayList<Integer> toRemove = new ArrayList<>(Arrays.asList(1,SMALL));
+        assertTrue(testArraySet.removeAll(toRemove));
+        assertEquals(SMALL - 1, testArraySet.size());
+        assertFalse(testArraySet.containsAll(toRemove));
+    }
+
+    @Test
+    public void testRemoveAllFromNotEmptySetNone() {
+        for (int i = 0; i < SMALL; ++i) {
+            testArraySet.add(i);
+        }
+        ArrayList<Integer> toRemove = new ArrayList<>(Arrays.asList(MEDIUM,SMALL));
+        assertFalse(testArraySet.removeAll(toRemove));
+        assertEquals(SMALL, testArraySet.size());
+    }
+    @Test
+    public void testRemoveAllFromNotEmptySetBiggerSizeCollection() {
+        for (int i = 0; i < SMALL; ++i) {
+            testArraySet.add(i);
+        }
+        ArrayList<Integer> toRemove =
+                new ArrayList<>(Arrays.asList(1,2,3,4,5,6,7,8,9,0,-1));
+        assertTrue(testArraySet.removeAll(toRemove));
         assertEquals(0, testArraySet.size());
     }
 }
